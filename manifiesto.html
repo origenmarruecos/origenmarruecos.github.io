@@ -1,0 +1,299 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#C1272D">
+<title>MANIFIESTO · ORIGEN MARRUECOS</title>
+<meta name="description" content="Manifiesto de ORIGEN MARRUECOS. Se vota con la cartera.">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=IBM+Plex+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800;900&display=swap');
+
+:root{
+  --red:#C1272D;
+  --red-dark:#8E1720;
+  --green:#006233;
+  --ink:#111512;
+  --bone:#F2EBDD;
+  --paper:#FFFDF8;
+  --muted:#706d65;
+  --line:#CFC7B8;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;
+  background:
+    linear-gradient(rgba(17,21,18,.028) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(17,21,18,.028) 1px,transparent 1px),
+    var(--bone);
+  background-size:24px 24px;
+  color:var(--ink);
+  font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;
+}
+a{color:inherit}
+::selection{background:var(--green);color:#fff}
+.marquee{
+  overflow:hidden;background:var(--red);color:white;border-bottom:2px solid var(--ink);
+  font:700 12px/1 "IBM Plex Mono",monospace;letter-spacing:.09em;text-transform:uppercase;
+}
+.marquee-track{
+  display:flex;width:max-content;gap:44px;padding:11px 0;animation:marquee 26s linear infinite;
+}
+.marquee-track span{white-space:nowrap}
+.marquee-track b{color:#b8ffc9}
+@keyframes marquee{to{transform:translateX(-50%)}}
+
+.nav{
+  position:sticky;top:0;z-index:50;background:rgba(242,235,221,.94);
+  backdrop-filter:blur(14px);border-bottom:2px solid var(--ink);
+}
+.nav-inner{
+  width:min(1180px,calc(100% - 32px));margin:auto;min-height:64px;
+  display:flex;align-items:center;justify-content:space-between;gap:22px;
+}
+.logo{
+  display:flex;align-items:center;gap:10px;text-decoration:none;font-weight:950;
+  letter-spacing:-.04em;font-size:20px;
+}
+.logo-mark{
+  width:30px;height:30px;background:var(--red);display:grid;place-items:center;
+  color:var(--green);font-size:19px;border:2px solid var(--ink);transform:rotate(-4deg);
+}
+.nav-actions{display:flex;gap:8px;flex-wrap:wrap}
+.btn{
+  border:2px solid var(--ink);background:var(--paper);color:var(--ink);text-decoration:none;
+  padding:10px 14px;font-weight:900;box-shadow:4px 4px 0 var(--ink);display:inline-flex;gap:8px;align-items:center;
+  text-transform:uppercase;
+}
+.btn.primary{background:var(--red);color:#fff}
+.btn svg{width:18px;height:18px}
+
+.wrap{width:min(1180px,calc(100% - 32px));margin:auto}
+.hero{padding:42px 0 22px}
+.eyebrow{
+  display:inline-flex;align-items:center;gap:11px;padding:14px 18px;border:2px solid var(--ink);
+  background:var(--paper);box-shadow:7px 7px 0 var(--green);
+  font:700 12px/1.45 "IBM Plex Mono",monospace;text-transform:uppercase;letter-spacing:.09em;
+}
+.eyebrow::before{content:"";width:14px;height:14px;border-radius:50%;background:var(--red)}
+h1{
+  margin:26px 0 12px;font-family:"Archivo Black",Impact,sans-serif;
+  font-size:clamp(54px,8.4vw,112px);line-height:.88;letter-spacing:-.055em;text-transform:uppercase;
+}
+.hero-lead{max-width:860px;font-size:19px;line-height:1.65;font-weight:600}
+.hero-lead strong{color:var(--red)}
+.hero-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:28px;align-items:start}
+.side-card{
+  background:var(--paper);border:2px solid var(--ink);padding:24px;box-shadow:7px 7px 0 rgba(17,21,18,.08)
+}
+.side-card h2{
+  font-family:"Archivo Black",sans-serif;font-size:28px;line-height:.95;text-transform:uppercase;margin:0 0 16px
+}
+.side-card p,.side-card li{
+  font-size:14px;line-height:1.65;color:#2a2f2b
+}
+.side-card ul{padding-left:20px;margin:0}
+.side-card .slogan{
+  margin-top:18px;padding-top:16px;border-top:2px solid var(--line);
+  font-family:"Archivo Black";font-size:34px;line-height:.9;text-transform:uppercase;color:var(--green)
+}
+
+.main{
+  padding:20px 0 70px;
+}
+.manifest-card{
+  background:var(--paper);border:2px solid var(--ink);box-shadow:9px 9px 0 rgba(17,21,18,.09);
+}
+.section{
+  display:grid;grid-template-columns:230px 1fr;gap:28px;padding:30px 28px;border-top:2px solid var(--line)
+}
+.section:first-child{border-top:0}
+.section-no{
+  font:800 12px/1.45 "IBM Plex Mono",monospace;text-transform:uppercase;letter-spacing:.09em;color:var(--green)
+}
+.section-no b{display:block;font:900 40px/1 "Archivo Black",sans-serif;color:var(--ink)}
+.section h3{
+  margin:0 0 14px;font-family:"Archivo Black",sans-serif;font-size:34px;line-height:.92;text-transform:uppercase
+}
+.section p{
+  margin:0 0 14px;font-size:16px;line-height:1.78;color:#1f2622
+}
+.section p:last-child{margin-bottom:0}
+.section strong{color:var(--red)}
+.links{
+  display:flex;flex-wrap:wrap;gap:10px;margin:16px 0 4px
+}
+.links a{
+  display:inline-flex;align-items:center;gap:8px;padding:10px 12px;text-decoration:none;
+  border:1.5px solid var(--ink);background:#f7f2e8;font:700 11px/1.2 "IBM Plex Mono",monospace;
+  text-transform:uppercase
+}
+.links a:hover{background:#efe6d7}
+.big-claim{
+  margin-top:14px;padding:18px 20px;border-left:6px solid var(--green);background:#eef6f1;
+  font-weight:800;font-size:20px;line-height:1.45
+}
+.finale{
+  background:linear-gradient(135deg,var(--red) 0 68%,var(--green) 68% 100%);
+  color:#fff;padding:34px 28px;border-top:2px solid var(--ink)
+}
+.finale h3{
+  margin:0 0 10px;font-family:"Archivo Black",sans-serif;font-size:44px;line-height:.9;text-transform:uppercase
+}
+.finale p{margin:0 0 16px;max-width:780px;font-size:18px;line-height:1.6;color:#fff6f6}
+.finale .slogans{
+  display:flex;flex-wrap:wrap;gap:12px;margin-top:10px
+}
+.finale .chip{
+  padding:12px 14px;border:2px solid rgba(255,255,255,.7);font-family:"Archivo Black";font-size:18px;text-transform:uppercase
+}
+.footer{
+  padding:38px 0 60px;background:var(--ink);color:#fff;border-top:2px solid var(--ink)
+}
+.footer p{margin:0;max-width:900px;color:#b9bdb9;font-size:13px;line-height:1.65}
+.footer small{display:block;margin-top:10px;font:500 10px "IBM Plex Mono",monospace;text-transform:uppercase;color:#8c938d}
+
+@media(max-width:940px){
+  .hero-grid{grid-template-columns:1fr}
+  .section{grid-template-columns:1fr;gap:14px}
+}
+@media(max-width:620px){
+  .nav-inner,.wrap{width:min(100% - 20px,1180px)}
+  .logo{font-size:16px}
+  h1{font-size:clamp(42px,13vw,72px);line-height:.92}
+  .hero-lead{font-size:17px}
+  .section{padding:24px 18px}
+  .section h3{font-size:28px}
+  .finale{padding:26px 18px}
+  .finale h3{font-size:34px}
+}
+</style>
+</head>
+<body>
+<div class="marquee" aria-hidden="true">
+  <div class="marquee-track">
+    <span>BOICOT ECONÓMICO <b>◆</b> CONSUMO INFORMADO <b>◆</b> SE VOTA CON LA CARTERA <b>◆</b> ORIGEN MARRUECOS <b>◆</b></span>
+    <span>BOICOT ECONÓMICO <b>◆</b> CONSUMO INFORMADO <b>◆</b> SE VOTA CON LA CARTERA <b>◆</b> ORIGEN MARRUECOS <b>◆</b></span>
+  </div>
+</div>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a class="logo" href="index.html"><span class="logo-mark">★</span> ORIGEN MARRUECOS</a>
+    <div class="nav-actions">
+      <a class="btn" href="index.html">Volver a productos</a>
+      <a class="btn primary" href="#texto">
+        <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M6 3.5h9.8L20 7.7V20a1.5 1.5 0 0 1-1.5 1.5h-11A1.5 1.5 0 0 1 6 20z"/>
+          <path d="M15.5 3.5V8H20"/>
+          <path d="M9 12h6M9 15.5h6M9 19h4.5"/>
+        </svg>
+        Leer manifiesto
+      </a>
+    </div>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <span class="eyebrow">Documento público · España · versión 09/2026</span>
+      <h1>Manifiesto <span style="color:var(--red)">Origen Marruecos</span></h1>
+      <p class="hero-lead">Una declaración breve y directa para quien considera que <strong>las decisiones de compra son una forma legítima de presión económica</strong> y que España no debe seguir financiando con normalidad aquello que percibe como contrario a sus propios intereses.</p>
+    </div>
+    <aside class="side-card">
+      <h2>Ideas fuerza</h2>
+      <ul>
+        <li>Se vota con la cartera.</li>
+        <li>Si el Gobierno no defiende lo nuestro, el consumidor puede hacerlo.</li>
+        <li>España soporta cargas regulatorias que lastran a sus productores.</li>
+        <li>Marruecos compite en sectores sensibles mientras la relación bilateral genera fricciones graves.</li>
+        <li>El boicot que proponemos es económico, voluntario e informado.</li>
+      </ul>
+      <div class="slogan">No lo compres.<br>Se vota con la cartera.</div>
+    </aside>
+  </div>
+</header>
+
+<main class="main" id="texto">
+  <div class="wrap">
+    <article class="manifest-card">
+      <section class="section">
+        <div class="section-no"><b>01</b>Principio</div>
+        <div>
+          <h3>Se vota con la cartera</h3>
+          <p>La mayoría de los ciudadanos apenas dispone de herramientas reales para influir en la política exterior, en los acuerdos comerciales o en la conducta de un Gobierno. Pero sí posee una herramienta diaria, directa y eficaz: <strong>decidir dónde gasta su dinero</strong>.</p>
+          <p>Cada compra financia una empresa, una cadena de suministro y, en último término, una economía. Por eso defendemos el boicot económico voluntario como una forma legítima de presión cívica. No pedimos prohibiciones. No pedimos censura. Pedimos información para que cada consumidor pueda elegir con conocimiento.</p>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="section-no"><b>02</b>España</div>
+        <div>
+          <h3>Si no nos defienden, nos defendemos</h3>
+          <p>Que el Gobierno español no defienda de forma suficiente los intereses de sus ciudadanos no significa que los ciudadanos españoles carezcan de capacidad para defenderse. Podemos priorizar producto español, apoyar a nuestros agricultores y nuestras empresas, y retirar nuestro consumo de aquellas cadenas de suministro que consideramos perjudiciales para España.</p>
+          <p>No necesitamos permiso para ello. Es simplemente libertad de consumo ejercida con intención política y económica.</p>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="section-no"><b>03</b>Regulación</div>
+        <div>
+          <h3>España compite con una mano atada</h3>
+          <p>El productor español soporta una densa red de exigencias fitosanitarias, higiénicas, medioambientales y administrativas. Son cargas reales: controles, prohibiciones, costes, trazabilidad, registros y limitaciones productivas que encarecen y complican la actividad diaria de agricultores y empresarios.</p>
+          <div class="links">
+            <a href="https://eur-lex.europa.eu/eli/reg/2009/1107/oj/spa" target="_blank" rel="noopener noreferrer">Reglamento 1107/2009</a>
+            <a href="https://eur-lex.europa.eu/eli/reg/2005/396/oj" target="_blank" rel="noopener noreferrer">Reglamento 396/2005</a>
+            <a href="https://eur-lex.europa.eu/eli/reg/2004/852" target="_blank" rel="noopener noreferrer">Reglamento 852/2004</a>
+            <a href="https://eur-lex.europa.eu/eli/reg/2017/625/oj?locale=es" target="_blank" rel="noopener noreferrer">Reglamento 2017/625</a>
+            <a href="https://www.boe.es/buscar/act.php?id=BOE-A-2012-11605" target="_blank" rel="noopener noreferrer">RD 1311/2012</a>
+          </div>
+          <p>Mientras tanto, los supermercados españoles siguen comercializando productos procedentes de Marruecos que compiten directamente con nuestra producción en frutas, verduras, conservas o pesca. Aunque el producto importado deba respetar los límites de entrada en la UE, eso <strong>no elimina la desventaja práctica del productor español</strong>, que trabaja bajo una presión normativa constante y costosa.</p>
+          <div class="big-claim">Nuestra posición es simple: si España soporta estas cargas, el consumidor español tiene todo el derecho a premiar con su dinero a quien produce aquí y a castigar con su cartera aquello que las agrava.</div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="section-no"><b>04</b>Límite</div>
+        <div>
+          <h3>Hay comportamientos que ya no admiten normalidad</h3>
+          <p>La relación con Marruecos no puede analizarse sólo como una cuestión comercial. Para muchos españoles se ha convertido en una relación desequilibrada, costosa y cada vez más difícil de justificar. El episodio más grave y reciente ha sido la entrada masiva en Ceuta a finales de julio de 2026, que las autoridades españolas han descrito como una actuación organizada y no espontánea.</p>
+          <p>Para esta iniciativa, ese hecho tiene una consecuencia política muy clara: <strong>una frontera española no puede convertirse en un instrumento de presión</strong> mientras España sigue manteniendo con absoluta normalidad relaciones comerciales, financieras y de consumo como si nada hubiera pasado.</p>
+          <p>No se trata de hostilidad hacia personas por su nacionalidad. Se trata de afirmar que, cuando un país percibe una agresión a sus intereses, sus ciudadanos pueden responder retirando apoyo económico de forma voluntaria y pacífica.</p>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="section-no"><b>05</b>Acción</div>
+        <div>
+          <h3>Boicot económico, voluntario e informado</h3>
+          <p>ORIGEN MARRUECOS no actúa contra personas. Actúa sobre decisiones de consumo. Su objetivo es identificar productos con origen, elaboración o envasado documentado en Marruecos para que el consumidor español pueda decidir si quiere comprarlos o no.</p>
+          <p>No podemos reescribir nosotros los acuerdos internacionales. No podemos cambiar por decreto la política del Gobierno. Pero sí podemos mirar una etiqueta, comprobar un origen y elegir una alternativa española cuando exista.</p>
+          <p>Ese es el sentido de esta web y ese es el sentido de este manifiesto.</p>
+        </div>
+      </section>
+
+      <section class="finale">
+        <h3>Ya basta</h3>
+        <p>Queremos que quien compre en España pueda saber qué financia con su dinero. Y, si así lo decide, que pueda dejar de financiarlo. Esa es toda la lógica de ORIGEN MARRUECOS: información, criterio y presión económica voluntaria.</p>
+        <div class="slogans">
+          <span class="chip">Mira el origen</span>
+          <span class="chip">Compara</span>
+          <span class="chip">Decide</span>
+          <span class="chip">No lo compres</span>
+          <span class="chip">Se vota con la cartera</span>
+        </div>
+      </section>
+    </article>
+  </div>
+</main>
+
+<footer class="footer">
+  <div class="wrap">
+    <p>Este manifiesto forma parte del proyecto ORIGEN MARRUECOS. Su finalidad es informar al consumidor y facilitar decisiones voluntarias de compra. La web clasifica productos y cadenas de suministro, no personas.</p>
+    <small>ORIGEN MARRUECOS · manifiesto público · 09/2026</small>
+  </div>
+</footer>
+</body>
+</html>
