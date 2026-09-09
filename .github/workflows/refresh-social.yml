@@ -1,0 +1,42 @@
+name: Refresh social metadata
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/refresh-social.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Update social metadata
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          old = 'https://origenmarruecos.github.io/og-origen-marruecos.jpg'
+          new = 'https://origenmarruecos.github.io/assets/social/origen-marruecos-share-wide.jpg'
+          for name in ('index.html', 'manifiesto.html'):
+              p = Path(name)
+              s = p.read_text(encoding='utf-8')
+              s = s.replace(old, new)
+              s = s.replace('<meta property="og:image:width" content="600">', '<meta property="og:image:width" content="1000">')
+              s = s.replace('<meta property="og:image:height" content="315">', '<meta property="og:image:height" content="525">')
+              if '<link rel="manifest" href="/site.webmanifest">' not in s:
+                  marker = '<link rel="apple-touch-icon" href="/apple-touch-icon.png" sizes="180x180">'
+                  if marker in s:
+                      s = s.replace(marker, marker + '\n<link rel="manifest" href="/site.webmanifest">')
+              p.write_text(s, encoding='utf-8')
+          PY
+      - name: Commit metadata update
+        run: |
+          git config user.name "origenmarruecos"
+          git config user.email "327055556+origenmarruecos@users.noreply.github.com"
+          git add index.html manifiesto.html
+          git diff --cached --quiet && exit 0
+          git commit -m "Apuntar snippets a la imagen social corregida"
+          git push
