@@ -18,8 +18,8 @@ jobs:
 
       - name: Validate approved social image
         run: |
-          file assets/social/origen-marruecos-snippet-v12.jpg
-          test -s assets/social/origen-marruecos-snippet-v12.jpg
+          file assets/social/origen-marruecos-snippet.png
+          test -s assets/social/origen-marruecos-snippet.png
 
       - name: Point social metadata to approved image
         run: |
@@ -27,7 +27,7 @@ jobs:
           from pathlib import Path
           import re
 
-          url = 'https://origenmarruecos.github.io/assets/social/origen-marruecos-snippet-v12.jpg'
+          url = 'https://origenmarruecos.github.io/assets/social/origen-marruecos-snippet.png'
 
           for filename in ('index.html', 'manifiesto.html'):
               p = Path(filename)
@@ -36,9 +36,9 @@ jobs:
                   r'<meta property="og:image" content="[^"]*">': f'<meta property="og:image" content="{url}">',
                   r'<meta property="og:image:url" content="[^"]*">': f'<meta property="og:image:url" content="{url}">',
                   r'<meta property="og:image:secure_url" content="[^"]*">': f'<meta property="og:image:secure_url" content="{url}">',
-                  r'<meta property="og:image:type" content="[^"]*">': '<meta property="og:image:type" content="image/jpeg">',
-                  r'<meta property="og:image:width" content="[^"]*">': '<meta property="og:image:width" content="600">',
-                  r'<meta property="og:image:height" content="[^"]*">': '<meta property="og:image:height" content="315">',
+                  r'<meta property="og:image:type" content="[^"]*">': '<meta property="og:image:type" content="image/png">',
+                  r'<meta property="og:image:width" content="[^"]*">': '<meta property="og:image:width" content="1254">',
+                  r'<meta property="og:image:height" content="[^"]*">': '<meta property="og:image:height" content="1254">',
                   r'<meta name="twitter:image" content="[^"]*">': f'<meta name="twitter:image" content="{url}">',
                   r'<link rel="image_src" href="[^"]*">': f'<link rel="image_src" href="{url}">',
               }
@@ -53,5 +53,5 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add index.html manifiesto.html
           git diff --cached --quiet && exit 0
-          git commit -m "Usar imagen social aprobada v12"
+          git commit -m "Usar PNG social definitivo"
           git push
