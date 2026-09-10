@@ -1,0 +1,1 @@
+NO CONVERTIR. NO REDIMENSIONAR. NO AÑADIR PADDING. El snippet final debe usar una imagen horizontal 1200x630 que ocupe todo el lienzo.
