@@ -1,1 +1,0 @@
-Fuente visual: fotografía física aportada al proyecto el 10/09/2026. Asset de trabajo normalizado internamente a lienzo 1000x1000 WebP. La ficha pública mantiene el mismo contenedor visual y object-fit: contain que el resto del archivo.
