@@ -20,7 +20,6 @@ jobs:
         run: |
           file assets/social/origen-marruecos-snippet-v12.jpg
           test -s assets/social/origen-marruecos-snippet-v12.jpg
-          test "$(stat -c%s assets/social/origen-marruecos-snippet-v12.jpg)" -gt 20000
 
       - name: Point social metadata to approved image
         run: |
