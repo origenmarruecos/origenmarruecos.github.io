@@ -1,0 +1,1 @@
+Usar directamente https://origenmarruecos.github.io/assets/social/origen-marruecos-snippet.png como og:image y twitter:image. No generar derivados.
