@@ -24,22 +24,25 @@ jobs:
 
       - name: Copy approved preview assets
         run: |
-          mkdir -p assets/products assets/logos
+          mkdir -p assets/products assets/logos vendor
           cp -a _preview/assets/products/. assets/products/
           cp -a _preview/assets/logos/. assets/logos/
           cp _preview/scanner.js scanner.js
           cp _preview/scanner.css scanner.css
           cp _preview/verified-barcodes.js verified-barcodes.js
+          curl --fail --silent --show-error --location \
+            https://unpkg.com/@zxing/browser@0.2.1/umd/zxing-browser.min.js \
+            --output vendor/zxing-browser-0.2.1.min.js
           rm -rf _preview
 
       - name: Commit promoted assets
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add assets/products assets/logos scanner.js scanner.css verified-barcodes.js
+          git add assets/products assets/logos vendor scanner.js scanner.css verified-barcodes.js
           if git diff --cached --quiet; then
             echo "No asset changes to promote."
           else
-            git commit -m "Promover imágenes y escáner aprobados desde prototipo"
+            git commit -m "Mantener recursos del prototipo y autohospedar ZXing"
             git push
           fi
