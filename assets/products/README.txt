@@ -1,0 +1,1 @@
+Las imágenes de las fichas usan un marco cuadrado homogéneo, sin deformación. Las fotografías físicas verificables tienen prioridad. El contador de fichas se deriva de data.length y no debe mantenerse como una cifra manual.
