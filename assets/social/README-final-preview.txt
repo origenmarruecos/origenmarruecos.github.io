@@ -1,0 +1,1 @@
+PREVIEW FINAL: usar assets/social/origen-marruecos-snippet.png directamente en Open Graph. No convertir, no redimensionar, no añadir padding.
