@@ -14,35 +14,58 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
+      - name: Build social preview image
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y imagemagick
+          convert assets/social/origen-marruecos-share-wide-v2.jpg \
+            -resize 1200x630! \
+            -strip \
+            -quality 84 \
+            assets/social/origen-marruecos-share-1200x630-v3.jpg
+
       - name: Update social metadata
         run: |
           python - <<'PY'
           from pathlib import Path
-          urls = [
-              'https://origenmarruecos.github.io/og-origen-marruecos.jpg',
-              'https://origenmarruecos.github.io/assets/social/origen-marruecos-share-wide.jpg',
-          ]
-          new = 'https://origenmarruecos.github.io/assets/social/origen-marruecos-share-wide-v2.jpg'
+          import re
+
+          new = 'https://origenmarruecos.github.io/assets/social/origen-marruecos-share-1200x630-v3.jpg'
+
           for name in ('index.html', 'manifiesto.html'):
               p = Path(name)
               s = p.read_text(encoding='utf-8')
-              for old in urls:
-                  s = s.replace(old, new)
-              s = s.replace('<meta property="og:image:width" content="1000">', '<meta property="og:image:width" content="400">')
-              s = s.replace('<meta property="og:image:height" content="525">', '<meta property="og:image:height" content="210">')
-              s = s.replace('<meta property="og:image:width" content="600">', '<meta property="og:image:width" content="400">')
-              s = s.replace('<meta property="og:image:height" content="315">', '<meta property="og:image:height" content="210">')
-              if '<link rel="manifest" href="/site.webmanifest">' not in s:
-                  marker = '<link rel="apple-touch-icon" href="/apple-touch-icon.png" sizes="180x180">'
-                  if marker in s:
-                      s = s.replace(marker, marker + '\n<link rel="manifest" href="/site.webmanifest">')
+
+              s = re.sub(r'<meta property="og:image" content="[^"]+">',
+                         f'<meta property="og:image" content="{new}">', s)
+              s = re.sub(r'\n?<meta property="og:image:secure_url" content="[^"]+">', '', s)
+              s = re.sub(r'<meta property="og:image:width" content="[^"]+">',
+                         '<meta property="og:image:width" content="1200">', s)
+              s = re.sub(r'<meta property="og:image:height" content="[^"]+">',
+                         '<meta property="og:image:height" content="630">', s)
+              s = re.sub(r'<meta name="twitter:image" content="[^"]+">',
+                         f'<meta name="twitter:image" content="{new}">', s)
+              s = re.sub(r'<link rel="image_src" href="[^"]+">',
+                         f'<link rel="image_src" href="{new}">', s)
+
+              if 'property="og:image:url"' not in s:
+                  marker = f'<meta property="og:image" content="{new}">'
+                  s = s.replace(marker, marker + f'\n<meta property="og:image:url" content="{new}">')
+
               p.write_text(s, encoding='utf-8')
           PY
+
+      - name: Verify generated asset
+        run: |
+          identify assets/social/origen-marruecos-share-1200x630-v3.jpg
+          test $(stat -c%s assets/social/origen-marruecos-share-1200x630-v3.jpg) -lt 300000
+
       - name: Commit metadata update
         run: |
           git config user.name "origenmarruecos"
           git config user.email "327055556+origenmarruecos@users.noreply.github.com"
-          git add index.html manifiesto.html
+          git add index.html manifiesto.html assets/social/origen-marruecos-share-1200x630-v3.jpg
           git diff --cached --quiet && exit 0
-          git commit -m "Actualizar snippets al recurso social definitivo"
+          git commit -m "Corregir miniaturas de enlaces y metadatos sociales"
           git push
