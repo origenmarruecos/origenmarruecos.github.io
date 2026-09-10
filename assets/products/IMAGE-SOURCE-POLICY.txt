@@ -1,0 +1,1 @@
+Prioridad visual: 1) fotografía física verificable aportada; 2) imagen oficial del supermercado/fabricante; 3) imagen de distribuidor fiable. La imagen no constituye por sí sola evidencia de origen: la clasificación de la ficha depende de la trazabilidad indicada en source, url, evidence y note.
