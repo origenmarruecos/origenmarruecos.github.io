@@ -15,14 +15,21 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Build social preview image
+      - name: Build valid social preview image
         run: |
           sudo apt-get update -y
-          sudo apt-get install -y imagemagick
-          convert assets/social/origen-marruecos-share-wide-v2.jpg \
-            -resize 1200x630! \
-            -strip \
-            -quality 84 \
+          sudo apt-get install -y imagemagick fonts-dejavu-core
+          convert -size 1200x630 xc:'#F2EBDD' \
+            -fill '#111512' -draw 'rectangle 0,0 1200,92' \
+            -fill '#C1272D' -draw 'rectangle 0,92 1200,110' \
+            -font DejaVu-Sans-Bold -fill '#F2EBDD' -pointsize 34 -annotate +60+61 'ORIGEN MARRUECOS' \
+            -fill '#C1272D' -pointsize 58 -annotate +1080+67 '★' \
+            -fill '#111512' -pointsize 92 -annotate +58+245 'ORIGEN' \
+            -fill '#C1272D' -pointsize 106 -annotate +55+355 'MARRUECOS' \
+            -fill '#111512' -pointsize 35 -annotate +60+435 'SE VOTA CON LA CARTERA' \
+            -font DejaVu-Sans -fill '#5F5A52' -pointsize 27 -annotate +60+500 'Consulta y escanea productos vendidos en España' \
+            -annotate +60+540 'con origen o elaboración documentados en Marruecos.' \
+            -strip -quality 82 \
             assets/social/origen-marruecos-share-1200x630-v3.jpg
 
       - name: Update social metadata
