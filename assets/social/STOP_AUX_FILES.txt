@@ -1,0 +1,1 @@
+No crear más archivos auxiliares. Siguiente cambio: solo metadatos e imagen final.
