@@ -1,0 +1,1 @@
+Regla del proyecto: las imágenes de producto deben conservar el mismo encuadre visual que el archivo existente, sobre lienzo cuadrado equivalente 1000x1000, sin deformación y con object-fit: contain. Cuando se disponga de fotografía física aportada, se prioriza frente a imágenes de terceros.
