@@ -33,16 +33,17 @@ jobs:
           curl --fail --silent --show-error --location \
             https://unpkg.com/@zxing/browser@0.2.1/umd/zxing-browser.min.js \
             --output vendor/zxing-browser-0.2.1.min.js
+          sed -i 's#https://unpkg.com/@zxing/browser@0.2.1/umd/zxing-browser.min.js#vendor/zxing-browser-0.2.1.min.js#g' index.html
           rm -rf _preview
 
       - name: Commit promoted assets
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add assets/products assets/logos vendor scanner.js scanner.css verified-barcodes.js
+          git add assets/products assets/logos vendor scanner.js scanner.css verified-barcodes.js index.html
           if git diff --cached --quiet; then
             echo "No asset changes to promote."
           else
-            git commit -m "Mantener recursos del prototipo y autohospedar ZXing"
+            git commit -m "Servir recursos del escáner desde producción"
             git push
           fi
