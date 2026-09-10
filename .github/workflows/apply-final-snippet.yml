@@ -16,13 +16,25 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Point social metadata to approved horizontal image
+      - name: Crear JPEG horizontal desde el PNG ya subido
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y imagemagick
+          convert assets/social/origen-marruecos-snippet.png \
+            -background white -alpha remove -alpha off \
+            -resize 1200x630! \
+            -strip -interlace none -quality 85 \
+            assets/social/origen-marruecos-whatsapp-final.jpg
+          identify assets/social/origen-marruecos-whatsapp-final.jpg
+          test -s assets/social/origen-marruecos-whatsapp-final.jpg
+
+      - name: Apuntar metadatos al JPEG final
         run: |
           python - <<'PY'
           from pathlib import Path
           import re
 
-          url = 'https://origenmarruecos.github.io/assets/social/origen-marruecos-horizontal-v1.jpg'
+          url = 'https://origenmarruecos.github.io/assets/social/origen-marruecos-whatsapp-final.jpg'
 
           for filename in ('index.html', 'manifiesto.html'):
               p = Path(filename)
@@ -32,8 +44,8 @@ jobs:
                   r'<meta property="og:image:url" content="[^"]*">': f'<meta property="og:image:url" content="{url}">',
                   r'<meta property="og:image:secure_url" content="[^"]*">': f'<meta property="og:image:secure_url" content="{url}">',
                   r'<meta property="og:image:type" content="[^"]*">': '<meta property="og:image:type" content="image/jpeg">',
-                  r'<meta property="og:image:width" content="[^"]*">': '<meta property="og:image:width" content="600">',
-                  r'<meta property="og:image:height" content="[^"]*">': '<meta property="og:image:height" content="315">',
+                  r'<meta property="og:image:width" content="[^"]*">': '<meta property="og:image:width" content="1200">',
+                  r'<meta property="og:image:height" content="[^"]*">': '<meta property="og:image:height" content="630">',
                   r'<meta name="twitter:image" content="[^"]*">': f'<meta name="twitter:image" content="{url}">',
                   r'<link rel="image_src" href="[^"]*">': f'<link rel="image_src" href="{url}">',
               }
@@ -42,11 +54,11 @@ jobs:
               p.write_text(s, encoding='utf-8')
           PY
 
-      - name: Commit metadata
+      - name: Commit final
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add index.html manifiesto.html
+          git add assets/social/origen-marruecos-whatsapp-final.jpg index.html manifiesto.html
           git diff --cached --quiet && exit 0
-          git commit -m "Usar arte horizontal real en previews sociales"
+          git commit -m "Fijar snippet horizontal definitivo"
           git push
