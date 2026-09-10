@@ -18,9 +18,9 @@ jobs:
 
       - name: Rebuild approved snippet image
         run: |
-          cat .snippet-final/w00 .snippet-final/w01 .snippet-final/w02 .snippet-final/w03 | base64 -d > assets/social/origen-marruecos-snippet-final.jpg
-          file assets/social/origen-marruecos-snippet-final.jpg
-          test -s assets/social/origen-marruecos-snippet-final.jpg
+          base64 -d .snippet-upload/final-wide.b64 > assets/social/origen-marruecos-snippet-v8.jpg
+          file assets/social/origen-marruecos-snippet-v8.jpg
+          test -s assets/social/origen-marruecos-snippet-v8.jpg
 
       - name: Point social metadata to approved image
         run: |
@@ -28,29 +28,25 @@ jobs:
           from pathlib import Path
           import re
 
-          url = 'https://origenmarruecos.github.io/assets/social/origen-marruecos-snippet-final.jpg'
+          url = 'https://origenmarruecos.github.io/assets/social/origen-marruecos-snippet-v8.jpg'
 
           for filename in ('index.html', 'manifiesto.html'):
               p = Path(filename)
               s = p.read_text(encoding='utf-8')
-
-              def set_meta(prop, value):
-                  nonlocal_s = None
 
               replacements = {
                   r'<meta property="og:image" content="[^"]*">': f'<meta property="og:image" content="{url}">',
                   r'<meta property="og:image:url" content="[^"]*">': f'<meta property="og:image:url" content="{url}">',
                   r'<meta property="og:image:secure_url" content="[^"]*">': f'<meta property="og:image:secure_url" content="{url}">',
                   r'<meta property="og:image:type" content="[^"]*">': '<meta property="og:image:type" content="image/jpeg">',
-                  r'<meta property="og:image:width" content="[^"]*">': '<meta property="og:image:width" content="800">',
-                  r'<meta property="og:image:height" content="[^"]*">': '<meta property="og:image:height" content="420">',
+                  r'<meta property="og:image:width" content="[^"]*">': '<meta property="og:image:width" content="1200">',
+                  r'<meta property="og:image:height" content="[^"]*">': '<meta property="og:image:height" content="630">',
                   r'<meta name="twitter:image" content="[^"]*">': f'<meta name="twitter:image" content="{url}">',
                   r'<link rel="image_src" href="[^"]*">': f'<link rel="image_src" href="{url}">',
               }
 
               for pattern, repl in replacements.items():
-                  if re.search(pattern, s):
-                      s = re.sub(pattern, repl, s)
+                  s = re.sub(pattern, repl, s)
 
               if 'property="og:image:url"' not in s:
                   marker = f'<meta property="og:image" content="{url}">'
@@ -66,7 +62,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add assets/social/origen-marruecos-snippet-final.jpg index.html manifiesto.html
+          git add assets/social/origen-marruecos-snippet-v8.jpg index.html manifiesto.html
           git diff --cached --quiet && exit 0
-          git commit -m "Usar imagen aprobada en snippets sociales"
+          git commit -m "Publicar snippet social definitivo sin corrupción"
           git push
