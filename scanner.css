@@ -62,39 +62,40 @@
 body::after{
   content:"";
   position:fixed;
-  left:clamp(18px,2.2vw,34px);
-  bottom:clamp(62px,9vh,110px);
+  right:0;
+  bottom:0;
   width:clamp(116px,9vw,152px);
   aspect-ratio:674/1254;
   z-index:44;
   background:url('/assets/logos/ceuta.png') center/contain no-repeat;
-  filter:drop-shadow(6px 8px 0 rgba(17,21,18,.18));
-  transform-origin:44% 68%;
+  filter:drop-shadow(-5px 7px 0 rgba(17,21,18,.17));
+  transform-origin:100% 100%;
   pointer-events:none;
   will-change:transform,opacity;
-  animation:ceuta-fly-pop 1050ms cubic-bezier(.16,1,.3,1) 220ms both;
+  animation:ceuta-fly-swing 1150ms cubic-bezier(.22,.9,.24,1) 180ms both;
 }
-@keyframes ceuta-fly-pop{
-  0%{opacity:0;transform:translate(-46px,28px) rotate(-22deg) scale(.12,.42)}
-  44%{opacity:1;transform:translate(5px,-8px) rotate(-4deg) scale(1.13,.88)}
-  64%{transform:translate(-3px,4px) rotate(-12deg) scale(.93,1.08)}
-  82%{transform:translate(1px,-2px) rotate(-6deg) scale(1.035,.975)}
-  100%{opacity:1;transform:translate(0,0) rotate(-8deg) scale(1)}
+@keyframes ceuta-fly-swing{
+  0%{opacity:0;transform:translate(34%,108%) rotate(18deg) scale(.82)}
+  46%{opacity:1;transform:translate(-7px,-14px) rotate(1deg) scale(1.025)}
+  66%{transform:translate(3px,5px) rotate(10deg) scale(.99)}
+  82%{transform:translate(-1px,-2px) rotate(5deg) scale(1.008)}
+  92%{transform:translate(0,1px) rotate(8deg) scale(.998)}
+  100%{opacity:1;transform:translate(0,0) rotate(7deg) scale(1)}
 }
 
 @media(max-width:900px){.scanner-inner{grid-template-columns:1fr;padding-top:48px}.scanner-copy h2{font-size:58px}.prototype-pill{display:none}}
 @media(max-width:780px){
   body::after{
-    left:12px;
-    bottom:clamp(72px,11vh,108px);
+    right:0;
+    bottom:0;
     width:clamp(92px,24vw,112px);
-    filter:drop-shadow(4px 6px 0 rgba(17,21,18,.16));
+    filter:drop-shadow(-4px 5px 0 rgba(17,21,18,.15));
   }
 }
 @media(max-width:620px){.scanner-inner,.scanner-result-wrap{width:min(100% - 20px,1320px)}.scanner-panel{padding:9px;box-shadow:5px 5px 0 var(--red)}.scanner-screen{aspect-ratio:4/3}.scanner-controls{display:grid;grid-template-columns:1fr auto}.barcode-row{grid-template-columns:1fr}.barcode-row button{width:100%}.scanner-result{grid-template-columns:1fr;padding:16px}.result-mark{width:72px;height:72px;font-size:40px}.scanner-result h3{font-size:31px}.nav-actions #randomBtn{display:none}.product-photo{height:210px}.product-grid.compact .product-photo{height:150px}}
 @media(max-width:480px){
-  body::after{left:10px;bottom:76px;width:96px}
+  body::after{right:0;bottom:0;width:96px}
 }
 @media(prefers-reduced-motion:reduce){
-  body::after{animation:none;transform:rotate(-8deg)}
+  body::after{animation:none;transform:rotate(7deg)}
 }
