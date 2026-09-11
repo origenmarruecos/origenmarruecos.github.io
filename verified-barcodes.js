@@ -156,6 +156,66 @@ window.data.push(...[
   }
 ]);
 
+/* Altas documentadas DIA y ALDI 11/09/2026. */
+window.data.push(...[
+  {
+    id:"dia-ubago-sardinas-oliva",
+    chain:"DIA",
+    brand:"Ubago",
+    product:"Sardinas en aceite de oliva 80 g",
+    category:"Conservas de pescado",
+    status:"confirmed",
+    evidence:"País de origen: Marruecos · establecimiento MA 3498",
+    note:"La ficha oficial de DIA declara expresamente Marruecos como país de origen e identifica el establecimiento autorizado MA 3498. Se clasifica como origen confirmado.",
+    source:"Ficha oficial de DIA",
+    url:"https://www.dia.es/conservas-caldos-y-cremas/caballa-y-sardinas/p/242972",
+    checked:"11/09/2026",
+    geo:{scope:"unlocalized",postcodes:[],stores:[],note:"La ficha confirma el producto en DIA, pero la disponibilidad puede variar por zona de reparto."}
+  },
+  {
+    id:"dia-calvo-sardinillas-baja-sal",
+    chain:"DIA",
+    brand:"Calvo",
+    product:"Sardinillas en aceite de oliva bajo en sal 60 g",
+    category:"Conservas de pescado",
+    status:"confirmed",
+    evidence:"País de origen: Marruecos",
+    note:"La ficha oficial de DIA declara expresamente Marruecos como país de origen de esta referencia Calvo. Se clasifica como origen confirmado.",
+    source:"Ficha oficial de DIA",
+    url:"https://www.dia.es/conservas-caldos-y-cremas/caballa-y-sardinas/p/181199",
+    checked:"11/09/2026",
+    geo:{scope:"unlocalized",postcodes:[],stores:[],note:"La ficha confirma el producto en DIA, pero la disponibilidad puede variar por zona de reparto."}
+  },
+  {
+    id:"aldi-judia-verde-plana",
+    chain:"Aldi",
+    brand:"Fresco",
+    product:"Judía verde plana 500 g",
+    category:"Verdura fresca",
+    status:"variable",
+    evidence:"Origen posible: Marruecos, España",
+    note:"Folletos de ALDI Península publicados de forma repetida en 2026 indican Marruecos y España como posibles orígenes de esta referencia. Al ser producto fresco, debe comprobarse el país del lote disponible en tienda.",
+    source:"Folletos ALDI Península 2026",
+    url:"https://eldiariodeunapeluquera.com/wp-content/uploads/2026/04/Folleto-semanal-ALDI-Del-4-al-10-de-mayo-de-2026.pdf",
+    checked:"11/09/2026",
+    geo:{scope:"unlocalized",postcodes:[],stores:[],note:"El origen depende del lote; la documentación consultada no identifica disponibilidad por tienda."}
+  },
+  {
+    id:"aldi-arandanos-125",
+    chain:"Aldi",
+    brand:"Fresco",
+    product:"Arándanos 125 g",
+    category:"Fruta fresca",
+    status:"variable",
+    evidence:"Origen posible: España, Portugal, Chile, Marruecos, Polonia",
+    note:"El folleto ALDI Península vigente del 07/09 al 13/09/2026 incluye Marruecos entre los posibles orígenes de los arándanos de 125 g. El lote físico determina el país efectivo.",
+    source:"Folleto ALDI Península 07/09–13/09/2026 · reproducción de catálogo",
+    url:"https://www.kimbino.es/productos/arandanos/",
+    checked:"11/09/2026",
+    geo:{scope:"unlocalized",postcodes:[],stores:[],note:"El origen depende del lote; la fuente no identifica disponibilidad por tienda."}
+  }
+]);
+
 /* Imágenes locales: mantener compatibilidad con el archivo histórico WebP y aceptar
    también JPG, JPEG y PNG sin exigir conversiones manuales. scanner.js intenta primero
    .webp; este manejador intercepta el error antes de que descarte la figura y prueba
