@@ -232,3 +232,29 @@ window.data.push(...[
   window.addEventListener("load", schedule);
   schedule();
 })();
+
+/* Imágenes locales: mantener compatibilidad con el archivo histórico WebP y aceptar
+   también JPG, JPEG y PNG sin exigir conversiones manuales. scanner.js intenta primero
+   .webp; este manejador intercepta el error antes de que descarte la figura y prueba
+   sucesivamente el resto de extensiones. */
+(() => {
+  const formats = ['webp','jpg','jpeg','png'];
+
+  document.addEventListener('error', event => {
+    const img = event.target;
+    if (!(img instanceof HTMLImageElement)) return;
+
+    const src = img.getAttribute('src') || '';
+    if (!src.includes('assets/products/')) return;
+
+    const match = src.match(/^(.*\/[^?]+)\.(webp|jpg|jpeg|png)(\?[^#]*)?$/i);
+    if (!match) return;
+
+    const current = formats.indexOf(match[2].toLowerCase());
+    if (current < 0 || current >= formats.length - 1) return;
+
+    event.stopImmediatePropagation();
+    const next = formats[current + 1];
+    img.src = `${match[1]}.${next}${match[3] || ''}`;
+  }, true);
+})();
