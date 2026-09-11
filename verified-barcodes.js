@@ -187,20 +187,6 @@ window.data.push(...[
     geo:{scope:"unlocalized",postcodes:[],stores:[],note:"La ficha confirma el producto en DIA, pero la disponibilidad puede variar por zona de reparto."}
   },
   {
-    id:"aldi-judia-verde-plana",
-    chain:"Aldi",
-    brand:"Fresco",
-    product:"Judía verde plana 500 g",
-    category:"Verdura fresca",
-    status:"variable",
-    evidence:"Origen posible: Marruecos, España",
-    note:"Folletos de ALDI Península publicados de forma repetida en 2026 indican Marruecos y España como posibles orígenes de esta referencia. Al ser producto fresco, debe comprobarse el país del lote disponible en tienda.",
-    source:"Folletos ALDI Península 2026",
-    url:"https://eldiariodeunapeluquera.com/wp-content/uploads/2026/04/Folleto-semanal-ALDI-Del-4-al-10-de-mayo-de-2026.pdf",
-    checked:"11/09/2026",
-    geo:{scope:"unlocalized",postcodes:[],stores:[],note:"El origen depende del lote; la documentación consultada no identifica disponibilidad por tienda."}
-  },
-  {
     id:"aldi-arandanos-125",
     chain:"Aldi",
     brand:"Fresco",
