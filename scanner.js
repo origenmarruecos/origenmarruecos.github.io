@@ -29,7 +29,13 @@
   function localVerified(code){
     if (window.OM_VERIFIED_BARCODES?.[code]) return window.OM_VERIFIED_BARCODES[code];
     const rows = Array.isArray(window.data) ? window.data : [];
-    return rows.find(x => String(x.barcode || '') === code || (Array.isArray(x.barcodes) && x.barcodes.map(String).includes(code))) || null;
+    return rows.find(x => {
+      const candidates = [x.barcode, x.ean, x.EAN, x.gtin, x.GTIN];
+      if (Array.isArray(x.barcodes)) candidates.push(...x.barcodes);
+      if (Array.isArray(x.eans)) candidates.push(...x.eans);
+      if (Array.isArray(x.gtins)) candidates.push(...x.gtins);
+      return candidates.some(value => clean(value) === code);
+    }) || null;
   }
 
   function prefix611(code){ return code.startsWith('611'); }
@@ -85,16 +91,33 @@
 
     try{
       const verified = localVerified(code);
-      if (verified && ['confirmed','processed'].includes(verified.status)){
-        show('verified', {
+      if (verified){
+        const direct = ['confirmed','processed'].includes(verified.status);
+        const statusLabel = {
+          confirmed:'Origen confirmado',
+          processed:'Elaborado / envasado',
+          variable:'Origen variable',
+          conflict:'Datos contradictorios',
+          watch:'Vigilancia / revisar lote'
+        }[verified.status] || 'Ficha documentada';
+        const extra = verified.status === 'processed'
+          ? ' La relación documentada es de elaboración o envasado en Marruecos; la materia prima puede proceder de otro país.'
+          : verified.status === 'variable'
+            ? ' El origen puede variar según el lote; revisa el envase concreto.'
+            : verified.status === 'conflict'
+              ? ' Existen datos contradictorios entre fuentes; consulta la ficha documentada antes de clasificar el lote.'
+              : verified.status === 'watch'
+                ? ' Esta referencia está en vigilancia y requiere comprobar el lote concreto.'
+                : '';
+        show(direct ? 'verified' : 'hint', {
           code,
           title:verified.product || `Código ${code}`,
-          message:`<strong>${esc(verified.evidence || 'Ficha verificada por ORIGEN MARRUECOS.')}</strong>${verified.status === 'processed' ? ' La relación documentada es de elaboración o envasado en Marruecos; la materia prima puede proceder de otro país.' : ''}`,
-          chips:[verified.brand, verified.status === 'processed' ? 'Elaborado / envasado' : 'Origen confirmado'],
+          message:`<strong>${esc(verified.evidence || 'Ficha documentada por ORIGEN MARRUECOS.')}</strong>${extra}`,
+          chips:[verified.brand, statusLabel],
           url:verified.url,
           archive:verified.product || verified.brand
         });
-        setStatus('Coincidencia en la base verificada de ORIGEN MARRUECOS.');
+        setStatus('Coincidencia en la base documentada de ORIGEN MARRUECOS. No se ha consultado Open Food Facts.');
         return;
       }
 
