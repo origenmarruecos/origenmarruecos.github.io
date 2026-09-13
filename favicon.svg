@@ -1,1 +1,35 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect x="5" y="5" width="54" height="54" rx="2" fill="#c1272d" stroke="#111512" stroke-width="4"/><path d="M32 14.5l4.5 13.8h14.6l-11.8 8.6 4.5 13.8L32 42.2 20.2 50.7l4.5-13.8-11.8-8.6h14.6z" fill="none" stroke="#006233" stroke-width="3.4" stroke-linejoin="round"/></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96" role="img" aria-label="ORIGEN MARRUECOS">
+  <rect width="96" height="96" fill="#C1272D"/>
+  <circle cx="48" cy="48" r="42" fill="#F2EBDD" stroke="#111512" stroke-width="6"/>
+
+  <g transform="rotate(-8 43 44)">
+    <path d="M16 28 49 15c3-1 6 0 8 2l12 12c2 2 3 5 2 8L63 66c-1 4-4 6-8 6H24c-5 0-8-3-8-8V35c0-3 0-5 0-7Z" fill="#F2EBDD" stroke="#111512" stroke-width="5" stroke-linejoin="round"/>
+    <circle cx="54" cy="26" r="5.5" fill="none" stroke="#111512" stroke-width="4"/>
+
+    <!-- Silueta estilizada de Marruecos sin Sáhara Occidental -->
+    <path d="M31 32c3-5 6-8 10-10 3-2 7-2 10 0 2 1 4 3 6 4l5 1 2 4-3 4-4 2-2 5-4 2-3 4-5 2-3 5-5 2-3 4h-8l2-7 3-4 1-5-2-4 2-4 1-5Z" fill="#006233"/>
+
+    <g fill="#111512">
+      <rect x="23" y="58" width="4" height="10" rx="1"/>
+      <rect x="29" y="57" width="3" height="11" rx="1"/>
+      <rect x="34" y="58" width="5" height="10" rx="1"/>
+      <rect x="41" y="56" width="3" height="12" rx="1"/>
+      <rect x="46" y="57" width="4" height="11" rx="1"/>
+    </g>
+  </g>
+
+  <g>
+    <circle cx="62" cy="62" r="19" fill="#111512"/>
+    <circle cx="62" cy="62" r="14.5" fill="#F2EBDD"/>
+    <circle cx="62" cy="62" r="11.5" fill="#006233"/>
+    <path d="M75 75 86 86" stroke="#111512" stroke-width="7" stroke-linecap="round"/>
+    <path d="M75 75 86 86" stroke="#F2EBDD" stroke-width="3" stroke-linecap="round"/>
+    <text x="62" y="66" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="11" font-weight="900" fill="#F2EBDD" letter-spacing="-1">OM</text>
+  </g>
+
+  <g fill="#C1272D">
+    <path d="M73 28 77 17l5 2-5 10Z"/>
+    <path d="m78 33 10-7 3 5-11 6Z"/>
+    <path d="m80 39 12-1v5l-12 1Z"/>
+  </g>
+</svg>
