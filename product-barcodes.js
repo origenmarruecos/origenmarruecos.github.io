@@ -1,6 +1,6 @@
 /*
   ORIGEN MARRUECOS · EAN/GTIN verificados
-  Auditoría: 11/09/2026
+  Auditoría: 14/09/2026
 
   Esta capa centraliza los códigos que pueden vincularse de forma inequívoca a una
   ficha concreta. Se carga después de los ficheros de datos y antes de app.js y
@@ -12,6 +12,8 @@
 (() => {
   const verified = {
     // Alcampo / marcas comercializadas en Alcampo
+    'alcampo-sardinas-girasol': { gtin:'8410155004273', basis:'Referencia Auchan/Alcampo 120(84) g; EAN verificado en catálogo Auchan y correspondencia de formato, ingredientes y valores nutricionales con la ficha oficial Alcampo' },
+    'alcampo-sardinas-oliva': { gtin:'8410155004280', basis:'Referencia Auchan/Alcampo 120(84) g; EAN verificado en catálogo y correspondencia de formato, ingredientes y valores nutricionales con la ficha oficial Alcampo' },
     'alcampo-calvo-sardinas': { gtin:'8410090441270', basis:'Ficha comercial / catálogo Calvo' },
     'alcampo-belmonte-msc': { gtin:'3175690011005', basis:'Ficha oficial Alcampo' },
     'alcampo-belmonte-gourmet': { gtin:'3175690011036', basis:'Ficha oficial Alcampo' },
@@ -75,8 +77,6 @@
     ],
     exact_sku_gtin_not_publicly_verified: [
       'alcampo-romero',
-      'alcampo-sardinas-girasol',
-      'alcampo-sardinas-oliva',
       'alcampo-sardinas-baja-sal',
       'carrefour-caracol',
       'carrefour-ramiflor',
@@ -106,7 +106,7 @@
     Object.entries(verified).map(([id, meta]) => [id, meta.gtin])
   );
   window.OM_BARCODE_AUDIT = {
-    date: '11/09/2026',
+    date: '14/09/2026',
     totalFiches: rows.length,
     verifiedFiches: Object.keys(verified).filter(id => byId.has(id)).length,
     unresolved,
