@@ -33,6 +33,7 @@
     'alcampo-cuca-sardinas': { gtin:'8410698072722', basis:'Referencia CUCA sardinas en aceite de oliva 85 g verificada en catálogo comercial' },
 
     // Carrefour
+    'carrefour-caracol': { gtin:'8437001006465', basis:'Caracoles Peribáñez, Caracol Bobe precocido 500 g; EAN publicado para la referencia exacta y composición coincidente con la ficha oficial Carrefour' },
     'carrefour-tapita': { gtin:'3262960099020', basis:'Misma referencia Belmonte Tapita Marinera Mediterránea 300 g documentada con este EAN en Alcampo' },
 
     // Mercadona
@@ -54,7 +55,8 @@
     'lidl-nixe-sardinas-oliva': { gtin:'20046217', basis:'Nixe sardinas en aceite de oliva; EAN de la lata individual 125 g verificado en varias bases de etiquetado. La ficha española se comercializa en pack 2 x 125 g' },
 
     // DIA
-    'dia-calvo-sardinillas-baja-sal': { gtin:'8410090454560', basis:'Misma referencia Calvo sardinillas en aceite de oliva bajo en sal 90/60 g; GTIN verificado en catálogo del fabricante y ficha comercial' }
+    'dia-calvo-sardinillas-baja-sal': { gtin:'8410090454560', basis:'Misma referencia Calvo sardinillas en aceite de oliva bajo en sal 90/60 g; GTIN verificado en catálogo del fabricante y ficha comercial' },
+    'dia-ubago-sardinas-oliva': { gtin:'8410155120089', basis:'UBAGO sardinas en aceite de oliva 113 g / 80 g escurridos; EAN documentado en base alimentaria y composición/nutrición coincidentes con la ficha oficial DIA' }
   };
 
   // Fichas a las que NO se les asigna un código porque no existe una vinculación
@@ -89,14 +91,12 @@
     exact_sku_gtin_not_publicly_verified: [
       'alcampo-romero',
       'alcampo-sardinas-baja-sal',
-      'carrefour-caracol',
       'carrefour-ramiflor',
       'carrefour-elmenu',
       'alcampo-aceite',
       'alcampo-noras',
       'alcampo-pescadona-pulpo',
       'dia-alcaparras',
-      'dia-ubago-sardinas-oliva',
       'mercadona-1897-pack6'
     ]
   };
@@ -104,11 +104,37 @@
   const rows = Array.isArray(window.data) ? window.data : [];
   const byId = new Map(rows.map(row => [row.id, row]));
 
+  function validGtin(value){
+    const code = String(value || '').replace(/\D/g,'');
+    if (![8,12,13,14].includes(code.length)) return false;
+    const digits = [...code].map(Number);
+    const check = digits.pop();
+    let sum = 0;
+    for (let i = digits.length - 1, pos = 0; i >= 0; i--, pos++) {
+      sum += digits[i] * (pos % 2 === 0 ? 3 : 1);
+    }
+    return ((10 - (sum % 10)) % 10) === check;
+  }
+
+  const invalidGtins = [];
+  const gtinToIds = new Map();
+
   Object.entries(verified).forEach(([id, meta]) => {
     const row = byId.get(id);
     if (!row) return;
+    if (!validGtin(meta.gtin)) {
+      invalidGtins.push({id, gtin:meta.gtin});
+      return;
+    }
     row.barcode = meta.gtin;
+    const ids = gtinToIds.get(meta.gtin) || [];
+    ids.push(id);
+    gtinToIds.set(meta.gtin, ids);
   });
+
+  const duplicateGtins = Object.fromEntries(
+    [...gtinToIds.entries()].filter(([, ids]) => ids.length > 1)
+  );
 
   window.OM_PRODUCT_BARCODES = Object.fromEntries(
     Object.entries(verified).map(([id, meta]) => [id, meta.gtin])
@@ -118,6 +144,8 @@
     totalFiches: rows.length,
     verifiedFiches: Object.keys(verified).filter(id => byId.has(id)).length,
     unresolvedFiches: Object.values(unresolved).flat().filter(id => byId.has(id)).length,
+    invalidGtins,
+    duplicateGtins,
     unresolved,
     verified
   };
