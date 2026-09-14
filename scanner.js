@@ -230,8 +230,8 @@
   window.addEventListener('pagehide',()=>{if(scanning) stop();});
 })();
 
-// Preproducción: usa los assets locales del repositorio para que las fichas no dependan
-// de hosts externos y para mantener un lienzo de producto uniforme.
+// Usa los assets locales del repositorio para que las fichas no dependan
+// de hosts externos. Acepta WebP, JPG y PNG en ese orden.
 (() => {
   const logoPaths = {
     'Mercadona':'assets/logos/mercadona.svg',
@@ -262,11 +262,18 @@
     fig.className = 'product-photo';
     fig.dataset.productImage = id;
     const img = document.createElement('img');
-    img.src = `assets/products/${encodeURIComponent(id)}.webp?v=2`;
+    const base = `assets/products/${encodeURIComponent(id)}`;
+    const formats = ['webp','jpg','png'];
+    let formatIndex = 0;
+    img.src = `${base}.${formats[formatIndex]}?v=3`;
     img.alt = product ? `Imagen de ${product}` : 'Imagen del producto';
     img.loading = 'lazy';
     img.decoding = 'async';
-    img.addEventListener('error', () => fig.remove(), {once:true});
+    img.addEventListener('error', () => {
+      formatIndex += 1;
+      if (formatIndex < formats.length) img.src = `${base}.${formats[formatIndex]}?v=3`;
+      else fig.remove();
+    });
     fig.appendChild(img);
     return fig;
   }
