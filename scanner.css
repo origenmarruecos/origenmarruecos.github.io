@@ -83,6 +83,16 @@ body::after{
   100%{opacity:1;transform:translate(0,0) rotate(7deg) scale(1)}
 }
 
+/* Separa visualmente MARRUECOS del bloque rojo del arte en escritorio. */
+@media(min-width:781px){
+  .hero h1 .solid{
+    position:relative;
+    z-index:2;
+    -webkit-text-stroke:8px var(--bone);
+    paint-order:stroke fill;
+  }
+}
+
 @media(max-width:900px){.scanner-inner{grid-template-columns:1fr;padding-top:48px}.scanner-copy h2{font-size:58px}.prototype-pill{display:none}}
 @media(max-width:780px){
   body::after{
