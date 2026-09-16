@@ -59,7 +59,7 @@
 .modal-product-photo img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;object-position:center;display:block}
 
 /* Mosca fija de apoyo a Ceuta. Permanece en pantalla durante el scroll. */
-body::after{
+.ceuta-fly{
   content:"";
   position:fixed;
   right:0;
@@ -70,7 +70,13 @@ body::after{
   background:url('/assets/logos/ceuta.png') center/contain no-repeat;
   filter:drop-shadow(-5px 7px 0 rgba(17,21,18,.17));
   transform-origin:100% 100%;
-  pointer-events:none;
+  pointer-events:auto;
+  cursor:pointer;
+  border:0;
+  padding:0;
+  appearance:none;
+  -webkit-appearance:none;
+  -webkit-tap-highlight-color:transparent;
   will-change:transform,opacity;
   animation:ceuta-fly-swing 1150ms cubic-bezier(.22,.9,.24,1) 180ms both;
 }
@@ -95,7 +101,7 @@ body::after{
 
 @media(max-width:900px){.scanner-inner{grid-template-columns:1fr;padding-top:48px}.scanner-copy h2{font-size:58px}.prototype-pill{display:none}}
 @media(max-width:780px){
-  body::after{
+  .ceuta-fly{
     right:0;
     bottom:0;
     width:clamp(92px,24vw,112px);
@@ -104,8 +110,18 @@ body::after{
 }
 @media(max-width:620px){.scanner-inner,.scanner-result-wrap{width:min(100% - 20px,1320px)}.scanner-panel{padding:9px;box-shadow:5px 5px 0 var(--red)}.scanner-screen{aspect-ratio:4/3}.scanner-controls{display:grid;grid-template-columns:1fr auto}.barcode-row{grid-template-columns:1fr}.barcode-row button{width:100%}.scanner-result{grid-template-columns:1fr;padding:16px}.result-mark{width:72px;height:72px;font-size:40px}.scanner-result h3{font-size:31px}.nav-actions #randomBtn{display:none}.product-photo{height:210px}.product-grid.compact .product-photo{height:150px}}
 @media(max-width:480px){
-  body::after{right:0;bottom:0;width:96px}
+  .ceuta-fly{right:0;bottom:0;width:96px}
 }
 @media(prefers-reduced-motion:reduce){
-  body::after{animation:none;transform:rotate(7deg)}
+  .ceuta-fly{animation:none;transform:rotate(7deg)}
+}
+
+.ceuta-fly.is-hiding{
+  animation:ceuta-fly-swing 1150ms cubic-bezier(.22,.9,.24,1) 0ms reverse both;
+  pointer-events:none;
+}
+.ceuta-fly[hidden]{display:none!important}
+.ceuta-fly:focus-visible{outline:3px solid var(--green);outline-offset:-3px}
+@media(prefers-reduced-motion:reduce){
+  .ceuta-fly.is-hiding{opacity:0;transform:translate(34%,108%) rotate(18deg) scale(.82)}
 }

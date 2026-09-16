@@ -331,3 +331,26 @@ $("#copyTemplate").addEventListener("click",async()=>{
 updateSavedUI();
 updateLocalUI();
 render();
+
+function initCeutaFly(){
+  if(document.querySelector(".ceuta-fly")) return;
+  const fly = document.createElement("button");
+  fly.type = "button";
+  fly.className = "ceuta-fly";
+  fly.setAttribute("aria-label", "Ocultar distintivo de apoyo a Ceuta");
+  fly.title = "Ocultar";
+  document.body.appendChild(fly);
+
+  fly.addEventListener("click", () => {
+    if(fly.hidden || fly.classList.contains("is-hiding")) return;
+    const reducedMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if(reducedMotion){
+      fly.hidden = true;
+      return;
+    }
+    fly.classList.add("is-hiding");
+    fly.addEventListener("animationend", () => { fly.hidden = true; }, {once:true});
+  });
+}
+
+initCeutaFly();
