@@ -23,10 +23,18 @@ const chainMeta = {
   "DIA": {
     logo:"https://commons.wikimedia.org/wiki/Special:Redirect/file/Dia_2019.svg",
     domain:"dia.es"
+  },
+  "Eroski": {
+    logo:"https://commons.wikimedia.org/wiki/Special:Redirect/file/Eroski_logo.svg",
+    domain:"eroski.es"
+  },
+  "Hipercor": {
+    logo:"https://commons.wikimedia.org/wiki/Special:Redirect/file/Hipercor_logo.svg",
+    domain:"hipercor.es"
   }
 };
 
-const chainOrder = ["Mercadona","Carrefour","Alcampo","Lidl","Aldi","DIA"];
+const chainOrder = ["Mercadona","Carrefour","Alcampo","Lidl","Aldi","DIA","Eroski","Hipercor"];
 const labels = {
   confirmed:"Origen confirmado",
   processed:"Elaborado / envasado",
