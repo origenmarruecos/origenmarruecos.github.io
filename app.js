@@ -1,35 +1,35 @@
 const data = window.data || [];
 const chainMeta = {
   "Mercadona": {
-    logo:"https://commons.wikimedia.org/wiki/Special:Redirect/file/Mercadona.svg",
+    logo:"assets/logos/mercadona.svg",
     domain:"mercadona.es"
   },
   "Carrefour": {
-    logo:"https://upload.wikimedia.org/wikipedia/commons/5/5b/Carrefour_logo.svg",
+    logo:"assets/logos/carrefour.png",
     domain:"carrefour.es"
   },
   "Alcampo": {
-    logo:"https://commons.wikimedia.org/wiki/Special:Redirect/file/Alcampo.png",
+    logo:"assets/logos/alcampo.png",
     domain:"alcampo.es"
   },
   "Lidl": {
-    logo:"https://commons.wikimedia.org/wiki/Special:Redirect/file/Lidl-Logo.svg",
+    logo:"assets/logos/lidl.svg",
     domain:"lidl.es"
   },
   "Aldi": {
-    logo:"https://commons.wikimedia.org/wiki/Special:Redirect/file/AldiNord-WorldwideLogo.svg",
+    logo:"assets/logos/aldi.svg",
     domain:"aldi.es"
   },
   "DIA": {
-    logo:"https://commons.wikimedia.org/wiki/Special:Redirect/file/Dia_2019.svg",
+    logo:"assets/logos/dia.svg",
     domain:"dia.es"
   },
   "Eroski": {
-    logo:"https://commons.wikimedia.org/wiki/Special:Redirect/file/Eroski_logo.svg",
+    logo:"assets/logos/eroski.svg",
     domain:"eroski.es"
   },
   "Hipercor": {
-    logo:"https://commons.wikimedia.org/wiki/Special:Redirect/file/Hipercor_logo.svg",
+    logo:"assets/logos/hipercor.svg",
     domain:"hipercor.es"
   }
 };
