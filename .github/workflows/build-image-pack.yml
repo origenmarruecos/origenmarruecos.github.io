@@ -1,4 +1,4 @@
-name: Internalize supermarket logos
+name: Make Ceuta fly dismissible
 
 on:
   push:
@@ -9,7 +9,7 @@ permissions:
   contents: write
 
 jobs:
-  internalize:
+  update:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout production
@@ -18,39 +18,38 @@ jobs:
           ref: main
           fetch-depth: 0
 
-      - name: Download Eroski and Hipercor logos
-        shell: bash
-        run: |
-          set -euo pipefail
-          mkdir -p assets/logos
-          curl -L --fail --retry 3 'https://upload.wikimedia.org/wikipedia/commons/1/13/Eroski_logo.svg' -o assets/logos/eroski.svg
-          curl -L --fail --retry 3 'https://upload.wikimedia.org/wikipedia/commons/f/fa/Hipercor_logo.svg' -o assets/logos/hipercor.svg
-          test -s assets/logos/eroski.svg
-          test -s assets/logos/hipercor.svg
-
-      - name: Point every supermarket logo to local assets
+      - name: Convert floating Ceuta badge into a clickable dismissible element
         shell: bash
         run: |
           python - <<'PY'
           from pathlib import Path
-          p = Path('app.js')
-          s = p.read_text(encoding='utf-8')
-          replacements = {
-              'https://commons.wikimedia.org/wiki/Special:Redirect/file/Mercadona.svg': 'assets/logos/mercadona.svg',
-              'https://upload.wikimedia.org/wikipedia/commons/5/5b/Carrefour_logo.svg': 'assets/logos/carrefour.png',
-              'https://commons.wikimedia.org/wiki/Special:Redirect/file/Alcampo.png': 'assets/logos/alcampo.png',
-              'https://commons.wikimedia.org/wiki/Special:Redirect/file/Lidl-Logo.svg': 'assets/logos/lidl.svg',
-              'https://commons.wikimedia.org/wiki/Special:Redirect/file/AldiNord-WorldwideLogo.svg': 'assets/logos/aldi.svg',
-              'https://commons.wikimedia.org/wiki/Special:Redirect/file/Dia_2019.svg': 'assets/logos/dia.svg',
-              'https://commons.wikimedia.org/wiki/Special:Redirect/file/Eroski_logo.svg': 'assets/logos/eroski.svg',
-              'https://commons.wikimedia.org/wiki/Special:Redirect/file/Hipercor_logo.svg': 'assets/logos/hipercor.svg',
-          }
-          missing = [old for old in replacements if old not in s]
-          if missing:
-              raise SystemExit(f'Expected logo URLs not found in app.js: {missing}')
-          for old, new in replacements.items():
-              s = s.replace(old, new)
-          p.write_text(s, encoding='utf-8')
+
+          css_path = Path('scanner.css')
+          css = css_path.read_text(encoding='utf-8')
+
+          if 'body::after{' not in css:
+              raise SystemExit('Ceuta pseudo-element not found in scanner.css')
+
+          css = css.replace('body::after{', '.ceuta-fly{')
+
+          old = '''  pointer-events:none;\n  will-change:transform,opacity;'''
+          new = '''  pointer-events:auto;\n  cursor:pointer;\n  border:0;\n  padding:0;\n  appearance:none;\n  -webkit-appearance:none;\n  -webkit-tap-highlight-color:transparent;\n  will-change:transform,opacity;'''
+          if old not in css:
+              raise SystemExit('Expected pointer-events block not found in scanner.css')
+          css = css.replace(old, new, 1)
+
+          extra_css = '''\n.ceuta-fly.is-hiding{\n  animation:ceuta-fly-swing 1150ms cubic-bezier(.22,.9,.24,1) 0ms reverse both;\n  pointer-events:none;\n}\n.ceuta-fly[hidden]{display:none!important}\n.ceuta-fly:focus-visible{outline:3px solid var(--green);outline-offset:-3px}\n@media(prefers-reduced-motion:reduce){\n  .ceuta-fly.is-hiding{opacity:0;transform:translate(34%,108%) rotate(18deg) scale(.82)}\n}\n'''
+          if '.ceuta-fly.is-hiding{' not in css:
+              css += extra_css
+          css_path.write_text(css, encoding='utf-8')
+
+          app_path = Path('app.js')
+          app = app_path.read_text(encoding='utf-8')
+          if 'function initCeutaFly()' in app:
+              raise SystemExit('Ceuta fly handler already exists in app.js')
+
+          app += '''\n\nfunction initCeutaFly(){\n  if(document.querySelector(".ceuta-fly")) return;\n  const fly = document.createElement("button");\n  fly.type = "button";\n  fly.className = "ceuta-fly";\n  fly.setAttribute("aria-label", "Ocultar distintivo de apoyo a Ceuta");\n  fly.title = "Ocultar";\n  document.body.appendChild(fly);\n\n  fly.addEventListener("click", () => {\n    if(fly.hidden || fly.classList.contains("is-hiding")) return;\n    const reducedMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;\n    if(reducedMotion){\n      fly.hidden = true;\n      return;\n    }\n    fly.classList.add("is-hiding");\n    fly.addEventListener("animationend", () => { fly.hidden = true; }, {once:true});\n  });\n}\n\ninitCeutaFly();\n'''
+          app_path.write_text(app, encoding='utf-8')
           PY
 
       - name: Commit to production
@@ -59,6 +58,6 @@ jobs:
           set -euo pipefail
           git config user.name 'origenmarruecos'
           git config user.email '327055556+origenmarruecos@users.noreply.github.com'
-          git add app.js assets/logos/eroski.svg assets/logos/hipercor.svg
-          git commit -m 'Internaliza logos de supermercados'
+          git add scanner.css app.js
+          git commit -m 'Permite ocultar la mosca de Ceuta al pulsarla'
           git push origin HEAD:main
