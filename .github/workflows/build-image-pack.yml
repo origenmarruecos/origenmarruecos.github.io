@@ -1,4 +1,4 @@
-name: Make Ceuta fly dismissible
+name: Refresh reactions preview
 
 on:
   push:
@@ -18,38 +18,58 @@ jobs:
           ref: main
           fetch-depth: 0
 
-      - name: Convert floating Ceuta badge into a clickable dismissible element
+      - name: Refresh homepage reactions
         shell: bash
         run: |
           python - <<'PY'
           from pathlib import Path
 
-          css_path = Path('scanner.css')
-          css = css_path.read_text(encoding='utf-8')
+          p = Path('index.html')
+          s = p.read_text(encoding='utf-8')
+          start_marker = '<section class="reactions-zone" id="reacciones">'
+          end_marker = '<footer class="footer">'
+          start = s.index(start_marker)
+          end = s.index(end_marker, start)
 
-          if 'body::after{' not in css:
-              raise SystemExit('Ceuta pseudo-element not found in scanner.css')
+          section = '''<section class="reactions-zone" id="reacciones">
+  <div class="section">
+    <div class="section-head">
+      <div><div class="section-kicker">05 / Reacciones</div><h2>El boicot<br>en los medios.</h2></div>
+      <p class="section-copy reactions-intro">Noticias y reacciones públicas que muestran cómo el boicot a los productos marroquíes, la revisión del origen y las herramientas para identificarlo están entrando en la conversación mediática.</p>
+    </div>
+    <div class="reactions-grid">
+      <article class="reaction-card featured">
+        <div class="reaction-meta"><span class="reaction-date">16 SEP 2026</span><span class="reaction-source">ANTENA 3 · ESPEJO PÚBLICO</span></div>
+        <span class="reaction-tag">Televisión</span>
+        <h3>Espejo Público lleva el boicot a la televisión nacional y muestra una aplicación para identificar productos</h3>
+        <a class="reaction-link" href="https://www.antena3.com/programas/espejo-publico/noticias/boicot-espanol-productos-turismo-marroqui-medida-presion-que-aprenda-respetar-espana_202609166aaa26a7e428ed29214090a0.html" target="_blank" rel="noopener noreferrer">Leer noticia ↗</a>
+      </article>
+      <article class="reaction-card">
+        <div class="reaction-meta"><span class="reaction-date">15 SEP 2026</span><span class="reaction-source">LA BANDERA</span></div>
+        <span class="reaction-tag">Reacción sectorial</span>
+        <h3>La Bandera recoge peticiones de protección del sector agrícola marroquí mientras Patriorigen supera los 203.000 usuarios</h3>
+        <a class="reaction-link" href="https://labandera.es/agricultores-marroquies-sanchez-patriorigen-203000-usuarios/" target="_blank" rel="noopener noreferrer">Leer noticia ↗</a>
+      </article>
+      <article class="reaction-card">
+        <div class="reaction-meta"><span class="reaction-date">14 SEP 2026</span><span class="reaction-source">EFE VERIFICA</span></div>
+        <span class="reaction-tag">Verificación</span>
+        <h3>EFE Verifica recuerda que el prefijo 611 no demuestra por sí solo el país de origen de un producto</h3>
+        <a class="reaction-link" href="https://verifica.efe.com/prefijos-codigo-barras-producto-origen-marroqui/" target="_blank" rel="noopener noreferrer">Leer verificación ↗</a>
+      </article>
+      <article class="reaction-card">
+        <div class="reaction-meta"><span class="reaction-date">14 SEP 2026</span><span class="reaction-source">MEDITERRÁNEO DIGITAL</span></div>
+        <span class="reaction-tag">Impacto</span>
+        <h3>Patriorigen supera los 100.000 usuarios en 48 horas, según los datos difundidos por sus responsables</h3>
+        <a class="reaction-link" href="https://www.mediterraneodigital.com/gente-y-tv/patriorigen" target="_blank" rel="noopener noreferrer">Leer noticia ↗</a>
+      </article>
+    </div>
+    <div class="reactions-more"><a class="cta" href="reacciones.html">Ver más →</a></div>
+  </div>
+</section>
 
-          css = css.replace('body::after{', '.ceuta-fly{')
+'''
 
-          old = '''  pointer-events:none;\n  will-change:transform,opacity;'''
-          new = '''  pointer-events:auto;\n  cursor:pointer;\n  border:0;\n  padding:0;\n  appearance:none;\n  -webkit-appearance:none;\n  -webkit-tap-highlight-color:transparent;\n  will-change:transform,opacity;'''
-          if old not in css:
-              raise SystemExit('Expected pointer-events block not found in scanner.css')
-          css = css.replace(old, new, 1)
-
-          extra_css = '''\n.ceuta-fly.is-hiding{\n  animation:ceuta-fly-swing 1150ms cubic-bezier(.22,.9,.24,1) 0ms reverse both;\n  pointer-events:none;\n}\n.ceuta-fly[hidden]{display:none!important}\n.ceuta-fly:focus-visible{outline:3px solid var(--green);outline-offset:-3px}\n@media(prefers-reduced-motion:reduce){\n  .ceuta-fly.is-hiding{opacity:0;transform:translate(34%,108%) rotate(18deg) scale(.82)}\n}\n'''
-          if '.ceuta-fly.is-hiding{' not in css:
-              css += extra_css
-          css_path.write_text(css, encoding='utf-8')
-
-          app_path = Path('app.js')
-          app = app_path.read_text(encoding='utf-8')
-          if 'function initCeutaFly()' in app:
-              raise SystemExit('Ceuta fly handler already exists in app.js')
-
-          app += '''\n\nfunction initCeutaFly(){\n  if(document.querySelector(".ceuta-fly")) return;\n  const fly = document.createElement("button");\n  fly.type = "button";\n  fly.className = "ceuta-fly";\n  fly.setAttribute("aria-label", "Ocultar distintivo de apoyo a Ceuta");\n  fly.title = "Ocultar";\n  document.body.appendChild(fly);\n\n  fly.addEventListener("click", () => {\n    if(fly.hidden || fly.classList.contains("is-hiding")) return;\n    const reducedMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;\n    if(reducedMotion){\n      fly.hidden = true;\n      return;\n    }\n    fly.classList.add("is-hiding");\n    fly.addEventListener("animationend", () => { fly.hidden = true; }, {once:true});\n  });\n}\n\ninitCeutaFly();\n'''
-          app_path.write_text(app, encoding='utf-8')
+          p.write_text(s[:start] + section + s[end:], encoding='utf-8')
           PY
 
       - name: Commit to production
@@ -58,6 +78,6 @@ jobs:
           set -euo pipefail
           git config user.name 'origenmarruecos'
           git config user.email '327055556+origenmarruecos@users.noreply.github.com'
-          git add scanner.css app.js
-          git commit -m 'Permite ocultar la mosca de Ceuta al pulsarla'
+          git add index.html
+          git commit -m 'Actualiza reacciones destacadas en portada'
           git push origin HEAD:main
