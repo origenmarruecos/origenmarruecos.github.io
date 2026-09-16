@@ -1,4 +1,4 @@
-name: Refresh reactions preview
+name: Fix favicon and site name
 
 on:
   push:
@@ -18,58 +18,32 @@ jobs:
           ref: main
           fetch-depth: 0
 
-      - name: Refresh homepage reactions
+      - name: Fix favicon declarations and site name metadata
         shell: bash
         run: |
           python - <<'PY'
           from pathlib import Path
 
+          files = [Path('index.html'), Path('manifiesto.html'), Path('reacciones.html'), Path('legal-privacidad.html')]
+          old = '<link rel="icon" href="/favicon.svg" type="image/svg+xml">\n<link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png">'
+          new = '<link rel="icon" href="/favicon.ico">\n<link rel="icon" href="/favicon-32.png" sizes="96x96" type="image/png">'
+
+          for p in files:
+              s = p.read_text(encoding='utf-8')
+              if old not in s:
+                  raise SystemExit(f'Expected favicon block not found in {p}')
+              s = s.replace(old, new, 1)
+              p.write_text(s, encoding='utf-8')
+
           p = Path('index.html')
           s = p.read_text(encoding='utf-8')
-          start_marker = '<section class="reactions-zone" id="reacciones">'
-          end_marker = '<footer class="footer">'
-          start = s.index(start_marker)
-          end = s.index(end_marker, start)
-
-          section = '''<section class="reactions-zone" id="reacciones">
-  <div class="section">
-    <div class="section-head">
-      <div><div class="section-kicker">05 / Reacciones</div><h2>El boicot<br>en los medios.</h2></div>
-      <p class="section-copy reactions-intro">Noticias y reacciones públicas que muestran cómo el boicot a los productos marroquíes, la revisión del origen y las herramientas para identificarlo están entrando en la conversación mediática.</p>
-    </div>
-    <div class="reactions-grid">
-      <article class="reaction-card featured">
-        <div class="reaction-meta"><span class="reaction-date">16 SEP 2026</span><span class="reaction-source">ANTENA 3 · ESPEJO PÚBLICO</span></div>
-        <span class="reaction-tag">Televisión</span>
-        <h3>Espejo Público lleva el boicot a la televisión nacional y muestra una aplicación para identificar productos</h3>
-        <a class="reaction-link" href="https://www.antena3.com/programas/espejo-publico/noticias/boicot-espanol-productos-turismo-marroqui-medida-presion-que-aprenda-respetar-espana_202609166aaa26a7e428ed29214090a0.html" target="_blank" rel="noopener noreferrer">Leer noticia ↗</a>
-      </article>
-      <article class="reaction-card">
-        <div class="reaction-meta"><span class="reaction-date">15 SEP 2026</span><span class="reaction-source">LA BANDERA</span></div>
-        <span class="reaction-tag">Reacción sectorial</span>
-        <h3>La Bandera recoge peticiones de protección del sector agrícola marroquí mientras Patriorigen supera los 203.000 usuarios</h3>
-        <a class="reaction-link" href="https://labandera.es/agricultores-marroquies-sanchez-patriorigen-203000-usuarios/" target="_blank" rel="noopener noreferrer">Leer noticia ↗</a>
-      </article>
-      <article class="reaction-card">
-        <div class="reaction-meta"><span class="reaction-date">14 SEP 2026</span><span class="reaction-source">EFE VERIFICA</span></div>
-        <span class="reaction-tag">Verificación</span>
-        <h3>EFE Verifica recuerda que el prefijo 611 no demuestra por sí solo el país de origen de un producto</h3>
-        <a class="reaction-link" href="https://verifica.efe.com/prefijos-codigo-barras-producto-origen-marroqui/" target="_blank" rel="noopener noreferrer">Leer verificación ↗</a>
-      </article>
-      <article class="reaction-card">
-        <div class="reaction-meta"><span class="reaction-date">14 SEP 2026</span><span class="reaction-source">MEDITERRÁNEO DIGITAL</span></div>
-        <span class="reaction-tag">Impacto</span>
-        <h3>Patriorigen supera los 100.000 usuarios en 48 horas, según los datos difundidos por sus responsables</h3>
-        <a class="reaction-link" href="https://www.mediterraneodigital.com/gente-y-tv/patriorigen" target="_blank" rel="noopener noreferrer">Leer noticia ↗</a>
-      </article>
-    </div>
-    <div class="reactions-more"><a class="cta" href="reacciones.html">Ver más →</a></div>
-  </div>
-</section>
-
-'''
-
-          p.write_text(s[:start] + section + s[end:], encoding='utf-8')
+          marker = '<link rel="manifest" href="/site.webmanifest">'
+          schema = '''<link rel="manifest" href="/site.webmanifest">\n<script type="application/ld+json">\n{\n  "@context": "https://schema.org",\n  "@type": "WebSite",\n  "name": "ORIGEN MARRUECOS",\n  "alternateName": ["Origen Marruecos", "origenmarruecos.github.io"],\n  "url": "https://origenmarruecos.github.io/"\n}\n</script>'''
+          if '"@type": "WebSite"' not in s:
+              if marker not in s:
+                  raise SystemExit('Manifest marker not found in index.html')
+              s = s.replace(marker, schema, 1)
+          p.write_text(s, encoding='utf-8')
           PY
 
       - name: Commit to production
@@ -78,6 +52,6 @@ jobs:
           set -euo pipefail
           git config user.name 'origenmarruecos'
           git config user.email '327055556+origenmarruecos@users.noreply.github.com'
-          git add index.html
-          git commit -m 'Actualiza reacciones destacadas en portada'
+          git add index.html manifiesto.html reacciones.html legal-privacidad.html
+          git commit -m 'Corrige favicon para Google y nombre del sitio'
           git push origin HEAD:main
