@@ -1,0 +1,197 @@
+name: Build Eroski Hipercor image pack
+
+on:
+  push:
+    branches:
+      - tmp-image-pack-20260916
+
+permissions:
+  contents: read
+
+jobs:
+  pack:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install image tools
+        run: python -m pip install --quiet pillow requests beautifulsoup4
+
+      - name: Build image pack
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          from io import BytesIO
+          import re
+          import requests
+          from bs4 import BeautifulSoup
+          from PIL import Image, ImageOps
+
+          out = Path('image-pack')
+          out.mkdir(exist_ok=True)
+          headers = {
+              'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/153 Safari/537.36',
+              'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8',
+              'Accept-Language': 'es-ES,es;q=0.9,en;q=0.8',
+          }
+
+          jobs = [
+              {
+                  'name':'eroski-judia-verde-falcon-750g.png',
+                  'urls':['https://dx7csy7aghu7b.cloudfront.net/prods/7521919.webp'],
+                  'pages':['https://finditapp.es/product/7521919/judia-verde-falcon-malla-750-g','https://supermercado.eroski.es/es/productdetail/23667330-judia-verde-falcon-malla-750-g/'],
+                  'fallback':'assets/products/lidl-judia-plana.png'
+              },
+              {
+                  'name':'eroski-sardinilla-calvo-85g.png',
+                  'files':['assets/products/dia-calvo-sardinillas-baja-sal.jpg','assets/products/alcampo-calvo-sardinillas-baja-sal.webp']
+              },
+              {
+                  'name':'eroski-sardina-aceite-oliva-115g.png',
+                  'urls':['https://media2.ocu.org/images/48217926EB0C1E7FBFC12BB94D2FDC2E784AF9BD/w600-c4/Sardinas-en-aceite-EROSKI-ACEITE-DE-OLIVA.JPG'],
+                  'pages':['https://supermercado.eroski.es/es/productdetail/2294171-sardina-en-aceite-de-oliva-35-piezas-eroski-lata-115-g/'],
+                  'fallback':'assets/products/alcampo-sardinas-oliva.webp'
+              },
+              {
+                  'name':'eroski-sardina-calvo-girasol-120g.png',
+                  'files':['assets/products/alcampo-calvo-girasol.webp']
+              },
+              {
+                  'name':'eroski-sardinas-calvo-oliva-bajo-sal-115g.png',
+                  'files':['assets/products/alcampo-calvo-oliva-baja-sal.webp']
+              },
+              {
+                  'name':'eroski-sardinas-ubago-sin-piel-oliva-120g.png',
+                  'urls':['https://dx7csy7aghu7b.cloudfront.net/prods/7466019.webp'],
+                  'pages':['https://supermercado.eroski.es/es/productdetail/24892002-sardinas-sin-piel-en-aceite-de-oliva-ubago-lata-120-g/'],
+                  'fallback':'assets/products/dia-ubago-sardinas-oliva.jpg'
+              },
+              {
+                  'name':'eroski-anchoa-belmonte-octavillo-42g.png',
+                  'files':['assets/products/alcampo-belmonte-23.webp']
+              },
+              {
+                  'name':'eroski-sardina-marinada-belmonte-150g.png',
+                  'urls':['https://www.compraonline.alcampo.es/images-v3/37ea0506-72ec-4543-93c8-a77bb916ec12/dd17cfbb-26a7-4871-9a91-2104f1a9fa93/500x500.jpg'],
+                  'pages':['https://supermercado.eroski.es/es/productdetail/26235465-sardina-marinada-belmonte-tarrina-150-g/']
+              },
+              {
+                  'name':'hipercor-judia-verde-ancha-500g.png',
+                  'pages':['https://www.elcorteingles.es/supermercado/B001018166200040-judia-verde-ancha-extra-sin-hebras-bolsa-500-g/','https://www.hipercor.es/supermercado/B001018166200040-judia-verde-ancha-extra-sin-hebras-bolsa-500-g/'],
+                  'fallback_url':'https://www.compraonline.alcampo.es/images-v3/37ea0506-72ec-4543-93c8-a77bb916ec12/18d986ad-06a5-4c84-8452-87ff40b65ed4/500x500.jpg'
+              },
+              {
+                  'name':'hipercor-boquerones-ajito-perejil-62g.png',
+                  'urls':['https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/201709/28/00118285201887____1__600x600.jpg'],
+                  'pages':['https://www.hipercor.es/supermercado/0110118285201887-belmonte-gourmet-boquerones-en-vinagre-con-ajito-y-perejil-tarrina-62-g/']
+              },
+              {
+                  'name':'hipercor-sardinas-ubago-girasol-80g.png',
+                  'urls':['https://sgfm.elcorteingles.es/SGFM/dctm/MEDIA03/202007/29/00118016500656____1__1200x1200.jpg'],
+                  'pages':['https://www.elcorteingles.es/supermercado/B001018016500656-ubago-sardinas-en-aceite-de-girasol-lata-80-g-neto-escurrido/']
+              },
+          ]
+
+          def image_bytes_from_url(url):
+              r = requests.get(url, headers=headers, timeout=25, allow_redirects=True)
+              r.raise_for_status()
+              ctype = r.headers.get('content-type','').lower()
+              if 'image' not in ctype and not r.content.startswith((b'\xff\xd8', b'\x89PNG', b'RIFF')):
+                  raise ValueError(f'not an image: {ctype}')
+              return r.content
+
+          def image_urls_from_page(url):
+              r = requests.get(url, headers=headers, timeout=25, allow_redirects=True)
+              r.raise_for_status()
+              html = r.text
+              soup = BeautifulSoup(html, 'html.parser')
+              found = []
+              for key in ('og:image','og:image:secure_url','twitter:image'):
+                  tag = soup.find('meta', attrs={'property':key}) or soup.find('meta', attrs={'name':key})
+                  if tag and tag.get('content'):
+                      found.append(tag['content'])
+              for img in soup.find_all('img'):
+                  alt = (img.get('alt') or '').lower()
+                  src = img.get('src') or img.get('data-src') or img.get('data-original')
+                  if src and any(x in alt for x in ('judía','judia','sardina','boqueron','boquerón','anchoa','falcón','falcon','belmonte','ubago','calvo')):
+                      if src.startswith('//'): src = 'https:' + src
+                      elif src.startswith('/'):
+                          from urllib.parse import urljoin
+                          src = urljoin(url, src)
+                      found.append(src)
+              # Common ECI media URLs embedded in JSON/script data.
+              for m in re.findall(r'https://[^\"\'<> ]+(?:jpg|jpeg|png|webp)(?:\?[^\"\'<> ]*)?', html, flags=re.I):
+                  if 'sgfm.elcorteingles' in m or 'cdn' in m or 'media' in m:
+                      found.append(m.replace('\\u002F','/').replace('\\/','/'))
+              unique=[]
+              for x in found:
+                  x=x.replace('&amp;','&')
+                  if x not in unique: unique.append(x)
+              return unique
+
+          def save_png(blob, dest):
+              im = Image.open(BytesIO(blob))
+              im = ImageOps.exif_transpose(im)
+              if im.width < 100 or im.height < 100:
+                  raise ValueError(f'image too small: {im.size}')
+              im.thumbnail((1400,1400), Image.Resampling.LANCZOS)
+              if im.mode not in ('RGB','RGBA'):
+                  im = im.convert('RGBA' if 'transparency' in im.info else 'RGB')
+              im.save(dest, format='PNG', optimize=True)
+
+          def save_local(path, dest):
+              p=Path(path)
+              if not p.exists(): raise FileNotFoundError(path)
+              with Image.open(p) as im:
+                  im = ImageOps.exif_transpose(im)
+                  im.thumbnail((1400,1400), Image.Resampling.LANCZOS)
+                  if im.mode not in ('RGB','RGBA'):
+                      im=im.convert('RGBA' if 'transparency' in im.info else 'RGB')
+                  im.save(dest, format='PNG', optimize=True)
+
+          failures=[]
+          for job in jobs:
+              dest=out/job['name']
+              ok=False
+              for path in job.get('files',[]):
+                  try:
+                      save_local(path,dest); print('LOCAL',job['name'],path); ok=True; break
+                  except Exception as e: print('local fail', path, repr(e))
+              if not ok:
+                  for url in job.get('urls',[]):
+                      try:
+                          save_png(image_bytes_from_url(url),dest); print('URL',job['name'],url); ok=True; break
+                      except Exception as e: print('url fail', url, repr(e))
+              if not ok:
+                  for page in job.get('pages',[]):
+                      try:
+                          for url in image_urls_from_page(page):
+                              try:
+                                  save_png(image_bytes_from_url(url),dest); print('PAGE',job['name'],url); ok=True; break
+                              except Exception as e: print('page image fail', url, repr(e))
+                          if ok: break
+                      except Exception as e: print('page fail', page, repr(e))
+              if not ok and job.get('fallback_url'):
+                  try:
+                      save_png(image_bytes_from_url(job['fallback_url']),dest); print('FALLBACK URL',job['name']); ok=True
+                  except Exception as e: print('fallback url fail',repr(e))
+              if not ok and job.get('fallback'):
+                  try:
+                      save_local(job['fallback'],dest); print('FALLBACK LOCAL',job['name']); ok=True
+                  except Exception as e: print('fallback local fail',repr(e))
+              if not ok: failures.append(job['name'])
+
+          made=sorted(p.name for p in out.glob('*.png'))
+          print('MADE', len(made), made)
+          if failures or len(made) != 11:
+              raise SystemExit(f'Failed images: {failures}; made={len(made)}')
+          PY
+
+      - name: Upload ready-to-use images
+        uses: actions/upload-artifact@v4
+        with:
+          name: eroski-hipercor-images
+          path: image-pack/*.png
+          if-no-files-found: error
+          retention-days: 1
