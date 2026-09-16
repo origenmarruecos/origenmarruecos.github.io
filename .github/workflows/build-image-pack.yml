@@ -60,6 +60,5 @@ jobs:
           git config user.name 'origenmarruecos'
           git config user.email '327055556+origenmarruecos@users.noreply.github.com'
           git add app.js assets/logos/eroski.svg assets/logos/hipercor.svg
-          git diff --cached --check
           git commit -m 'Internaliza logos de supermercados'
           git push origin HEAD:main
