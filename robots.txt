@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://origenmarruecos.github.io/sitemap.xml
